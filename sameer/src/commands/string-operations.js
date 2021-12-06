@@ -1,10 +1,10 @@
 import { replaceSelections } from './utils';
 import { minify } from 'terser';
 import { window, env } from 'vscode';
-const hexToHsl = require('hex-to-hsl');
 
 import { statSync, writeFileSync, readFileSync, mkdirSync } from 'fs';
 import { dirname, basename, join, resolve } from 'path';
+import JsonToTS from 'json-to-ts';
 
 export function apply_eval() {
   // https://esbuild.github.io/content-types/#direct-eval
@@ -64,9 +64,6 @@ export async function apply_minify(uri) {
   window.showInformationMessage('Saved: ' + resolve(outFile));
 }
 
-export function to_hsl() {
-  replaceSelections((t) => {
-    const [h, s, l] = hexToHsl(t);
-    return `hsl(${h}, ${s}%, ${l}%})`;
-  });
+export function json_to_ts() {
+  replaceSelections((s) => JsonToTS(JSON.parse(s)).join('\n'), true);
 }

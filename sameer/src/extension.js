@@ -2,7 +2,7 @@ import { commands } from 'vscode';
 import { sortAttrs } from './commands/angular-utils';
 import { create_index_file } from './commands/create_file';
 import { doMath, doMathFullFile } from './commands/do-math';
-import { apply_eval, sort_lines, apply_minify, to_hsl } from './commands/string-operations';
+import { apply_eval, sort_lines, apply_minify, json_to_ts } from './commands/string-operations';
 
 function activate(context) {
   function register(name, callback) {
@@ -10,7 +10,7 @@ function activate(context) {
   }
 
   register('sameer.eval', apply_eval);
-  register('sameer.to_hsl', to_hsl);
+  register('sameer.json_to_ts', json_to_ts);
   register('sameer.doMath', doMathFullFile);
   register('sameer.doMath.selected', doMath);
   register('sameer.angular.sort_attrs', sortAttrs);

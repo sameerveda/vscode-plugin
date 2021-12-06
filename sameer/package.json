@@ -2,7 +2,7 @@
     "name": "sameer",
     "displayName": "sameer",
     "description": "vscode utilities i use",
-    "version": "1.0.51",
+    "version": "1.0.53",
     "publisher": "sameer",
     "repository": "https://github.com/sameerveda/vscode-plugin",
     "engines": {
@@ -19,14 +19,14 @@
         "onCommand:sameer.sort_lines",
         "onCommand:sameer.create_index_file",
         "onCommand:sameer.minify",
-        "onCommand:sameer.to_hsl"
+        "onCommand:sameer.json_to_ts"
     ],
     "main": "./dist/extension.min.js",
     "contributes": {
         "commands": [
             {
-                "command": "sameer.to_hsl",
-                "title": "Sameer: Convert hex to hsl"
+                "command": "sameer.json_to_ts",
+                "title": "Sameer: Json To Ts"
             },
             {
                 "command": "sameer.doMath",
@@ -100,12 +100,13 @@
         "eslint": "^8.1.0",
         "glob": "^7.1.7",
         "mocha": "^9.1.3",
+        "prompts": "^2.4.2",
         "typescript": "^4.4.4",
         "vsce": "^2.5.0"
     },
     "dependencies": {
         "esbuild": "^0.13.12",
-        "hex-to-hsl": "^1.0.2",
+        "json-to-ts": "^1.7.0",
         "lodash": "^4.17.21",
         "mathjs": "^9.5.1",
         "terser": "^5.10.0"
