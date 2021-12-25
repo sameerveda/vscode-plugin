@@ -2,7 +2,7 @@
     "name": "sameer",
     "displayName": "sameer",
     "description": "vscode utilities i use",
-    "version": "1.0.53",
+    "version": "1.0.60",
     "publisher": "sameer",
     "repository": "https://github.com/sameerveda/vscode-plugin",
     "engines": {
@@ -19,7 +19,8 @@
         "onCommand:sameer.sort_lines",
         "onCommand:sameer.create_index_file",
         "onCommand:sameer.minify",
-        "onCommand:sameer.json_to_ts"
+        "onCommand:sameer.json_to_ts",
+        "onCommand:sameer.hex_to_rgb"
     ],
     "main": "./dist/extension.min.js",
     "contributes": {
@@ -27,6 +28,10 @@
             {
                 "command": "sameer.json_to_ts",
                 "title": "Sameer: Json To Ts"
+            },
+            {
+                "command": "sameer.hex_to_rgb",
+                "title": "Sameer: Hex to RGB"
             },
             {
                 "command": "sameer.doMath",
@@ -106,6 +111,7 @@
     },
     "dependencies": {
         "esbuild": "^0.13.12",
+        "hex-rgb": "^5.0.0",
         "json-to-ts": "^1.7.0",
         "lodash": "^4.17.21",
         "mathjs": "^9.5.1",

@@ -1,0 +1,33 @@
+{
+  "name": "sam-common-pack",
+  "displayName": "Sam: Common Dev Pack",
+  "description": "list of extensions i generally use",
+  "version": "0.0.2",
+  "publisher": "sameer",
+  "repository": "https://github.com/sameerveda/vscode-plugin",
+  "engines": {
+    "vscode": "^1.63.0"
+  },
+  "scripts": {
+    "package": "yarn vsce package --out dist-vsix/sameer-common-pack.vsix",    
+    "package:install": "yarn package && code --uninstall-extension sameer.sameer-common-pack && code --install-extension dist-vsix/sameer-common-pack.vsix"
+  },
+  "categories": [
+    "Extension Packs"
+  ],
+  "extensionPack": [
+    "abusaidm.html-snippets",
+    "alphabotsec.vscode-eclipse-keybindings",
+    "dbaeumer.vscode-eslint",
+    "ecmel.vscode-html-css",
+    "esbenp.prettier-vscode",
+    "marclipovsky.string-manipulation",
+    "PKief.material-icon-theme",
+    "streetsidesoftware.code-spell-checker",
+    "vincaslt.highlight-matching-tag",
+    "VisualStudioExptTeam.vscodeintellicode"
+  ],
+  "devDependencies": {
+    "vsce": "^2.5.3"
+  }
+}
