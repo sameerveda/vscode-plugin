@@ -1,6 +1,6 @@
 {
-  "name": "sam-common-pack",
-  "displayName": "Sam: Common Dev Pack",
+  "name": "sam-common-react-pack",
+  "displayName": "Sam: common-react Dev Pack",
   "description": "list of extensions i generally use",
   "version": "0.0.3",
   "publisher": "sameer",
@@ -8,14 +8,11 @@
   "engines": {
     "vscode": "^1.63.0"
   },
-  "scripts": {
-    "package": "yarn vsce package --out dist-vsix/sam-common-pack.vsix",    
-    "package:install": "yarn package && code --uninstall-extension sameer.sam-common-pack && code --install-extension dist-vsix/sam-common-pack.vsix"
-  },
   "categories": [
     "Extension Packs"
   ],
   "extensionPack": [
+    "shd101wyy.markdown-preview-enhanced",
     "abusaidm.html-snippets",
     "alphabotsec.vscode-eclipse-keybindings",
     "dbaeumer.vscode-eslint",
@@ -25,7 +22,10 @@
     "PKief.material-icon-theme",
     "streetsidesoftware.code-spell-checker",
     "vincaslt.highlight-matching-tag",
-    "VisualStudioExptTeam.vscodeintellicode"
+    "VisualStudioExptTeam.vscodeintellicode",
+    "RedVanWorkshop.explorer-exclude-vscode-extension",
+    "howardzuo.vscode-favorites",
+    "dsznajder.es7-react-js-snippets"
   ],
   "devDependencies": {
     "vsce": "^2.5.3"
