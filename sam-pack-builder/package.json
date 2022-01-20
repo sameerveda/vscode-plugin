@@ -1,6 +1,6 @@
 {
-  "name": "sam-common-react-pack",
-  "displayName": "Sam: common-react Dev Pack",
+  "name": "sam-common-python-pack",
+  "displayName": "Sam: common-python Dev Pack",
   "description": "list of extensions i generally use",
   "version": "0.0.3",
   "publisher": "sameer",
@@ -25,7 +25,14 @@
     "VisualStudioExptTeam.vscodeintellicode",
     "RedVanWorkshop.explorer-exclude-vscode-extension",
     "howardzuo.vscode-favorites",
-    "dsznajder.es7-react-js-snippets"
+    "mike-co.import-sorter",
+    "frhtylcn.pythonsnippets",
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "ms-toolsai.jupyter",
+    "ms-toolsai.jupyter-keymap",
+    "ms-toolsai.jupyter-renderers",
+    "tushortz.python-extended-snippets"
   ],
   "devDependencies": {
     "vsce": "^2.5.3"

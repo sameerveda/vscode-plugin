@@ -1,5 +1,20 @@
-const Mustache = require('mustache');
 const data = {
+  common: [
+    'shd101wyy.markdown-preview-enhanced',
+    'abusaidm.html-snippets',
+    'alphabotsec.vscode-eclipse-keybindings',
+    'dbaeumer.vscode-eslint',
+    'ecmel.vscode-html-css',
+    'esbenp.prettier-vscode',
+    'marclipovsky.string-manipulation',
+    'PKief.material-icon-theme',
+    'streetsidesoftware.code-spell-checker',
+    'vincaslt.highlight-matching-tag',
+    'VisualStudioExptTeam.vscodeintellicode',
+    'RedVanWorkshop.explorer-exclude-vscode-extension',
+    'howardzuo.vscode-favorites',
+    'mike-co.import-sorter'
+  ],
   php: [
     'brapifra.phpserver',
     'felixfbecker.php-debug',
@@ -23,21 +38,6 @@ const data = {
     'Mikael.Angular-BeastCode',
     'mike-co.import-sorter',
     'hardikpthv.NgRxSnippets',
-  ],
-  common: [
-    'shd101wyy.markdown-preview-enhanced',
-    'abusaidm.html-snippets',
-    'alphabotsec.vscode-eclipse-keybindings',
-    'dbaeumer.vscode-eslint',
-    'ecmel.vscode-html-css',
-    'esbenp.prettier-vscode',
-    'marclipovsky.string-manipulation',
-    'PKief.material-icon-theme',
-    'streetsidesoftware.code-spell-checker',
-    'vincaslt.highlight-matching-tag',
-    'VisualStudioExptTeam.vscodeintellicode',
-    'RedVanWorkshop.explorer-exclude-vscode-extension',
-    'howardzuo.vscode-favorites',
   ],
   java: [
     'naco-siren.gradle-language',
@@ -127,7 +127,7 @@ if (notFound.length !== 0)
   throw new Error('pack name not found: ' + JSON.stringify(notFound));
 
 const fs = require('fs');
-const name = process.argv.slice(2).join('-');
+const name = process.argv.slice(2).join('-').replace(/\W+/g, '-');
 for (const f of fs.readdirSync('./template')) {
   const content = fs
     .readFileSync('./template/' + f, 'utf-8')

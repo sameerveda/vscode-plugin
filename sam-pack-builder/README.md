@@ -1,2 +1,2 @@
-sam-common-react-pack
-Sam: common-react Dev Pack
+sam-common-python-pack
+Sam: common-python Dev Pack

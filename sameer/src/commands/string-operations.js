@@ -1,7 +1,6 @@
 import { replaceSelections } from './utils';
 import { minify } from 'terser';
 import { window, env } from 'vscode';
-import hexRgb from 'hex-rgb';
 
 import { statSync, writeFileSync, readFileSync, mkdirSync } from 'fs';
 import { dirname, basename, join, resolve } from 'path';
@@ -67,11 +66,4 @@ export async function apply_minify(uri) {
 
 export function json_to_ts() {
   replaceSelections((s) => JsonToTS(JSON.parse(s)).join('\n'), true);
-}
-
-export function hexToRgb() {
-  replaceSelections((s) => {
-    const { red, green, blue } = hexRgb(s);
-    return `rgb(${red}, ${green}, ${blue})`;
-  }, true);
 }
