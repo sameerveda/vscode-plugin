@@ -1,8 +1,13 @@
-import { commands } from 'vscode';
+import { commands, window, workspace } from 'vscode';
 import { sortAttrs } from './commands/angular-utils';
 import { create_index_file } from './commands/create_file';
 import { doMath } from './commands/do-math';
-import { apply_eval, sort_lines, apply_minify, json_to_ts } from './commands/string-operations';
+import {
+  apply_eval,
+  sort_lines,
+  apply_minify,
+  json_to_ts,
+} from './commands/string-operations';
 
 function activate(context) {
   function register(name, callback) {
@@ -16,6 +21,12 @@ function activate(context) {
   register('sameer.create_index_file', create_index_file);
   register('sameer.sort_lines', sort_lines);
   register('sameer.minify', apply_minify);
+  register('sameer.show_config', () =>
+    window.showInformationMessage(
+      JSON.stringify(workspace.getConfiguration('sameer'))
+    )
+  );
+  // add_new_command
 }
 
 function deactivate() {}

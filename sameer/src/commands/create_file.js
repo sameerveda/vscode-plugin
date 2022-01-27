@@ -6,8 +6,16 @@ import {
   unlinkSync,
 } from 'fs';
 import { dirname, join } from 'path';
+import { workspace } from 'vscode';
+const minimatch = require('minimatch');
 
 export function create_index_file(uri) {
+  const excluder_patterns =
+    workspace.getConfiguration('sameer').create_index_file.exclude_files;
+  const excluder = excluder_patterns.length
+    ? (filename) =>
+        excluder_patterns.some((pattern) => minimatch(filename, pattern))
+    : () => false;
   const root = statSync(uri.fsPath).isDirectory()
     ? uri.fsPath
     : dirname(uri.fsPath);
@@ -22,7 +30,7 @@ export function create_index_file(uri) {
   };
 
   const collected = readdirSync(root)
-    .filter((s) => statSync(join(root, s)).isFile())
+    .filter((s) => !excluder(s) && statSync(join(root, s)).isFile())
     .reduce((acc, curr) => {
       for (const key in collectors) {
         if (collectors[key](curr)) {

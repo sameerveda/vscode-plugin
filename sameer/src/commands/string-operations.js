@@ -1,6 +1,6 @@
 import { replaceSelections } from './utils';
 import { minify } from 'terser';
-import { window, env } from 'vscode';
+import { window, env, workspace } from 'vscode';
 
 import { statSync, writeFileSync, readFileSync, mkdirSync } from 'fs';
 import { dirname, basename, join, resolve } from 'path';
