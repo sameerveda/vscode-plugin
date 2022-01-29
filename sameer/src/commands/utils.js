@@ -41,3 +41,7 @@ export async function replaceSelections(replacer, appendError = false) {
     }
   });
 }
+
+export function show_config() {
+  window.showInformationMessage(JSON.stringify('hello'));
+}

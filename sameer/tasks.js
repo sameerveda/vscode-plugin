@@ -22,6 +22,7 @@ tasks.add_command = function (args) {
 
   const filepath = join(commands_dir, filename);
   const name = snakeCase(filename.replace(/\.js$/, '').trim()).toLowerCase();
+  const functionName = snakeCase(description.trim()).toLowerCase();
 
   if (!existsSync(filepath))
     return console.log(red('file not found: '), filepath);
@@ -56,11 +57,11 @@ tasks.add_command = function (args) {
     !(
       replace(
         '// add_new_command',
-        `register("${id}", ${name})\n// add_new_command`
+        `register("${id}", ${functionName});\n// add_new_command`
       ) &&
       replace(
         `} from './commands/${filename.replace(/\.js$/, '')}'`,
-        `, ${name} } from './commands/${filename.replace(/\.js$/, '')}'`
+        `, ${functionName} } from './commands/${filename.replace(/\.js$/, '')}'`
       )
     )
   ) {
@@ -70,13 +71,15 @@ tasks.add_command = function (args) {
   writeFileSync(
     filepath,
     readFileSync(filepath, 'utf-8').concat(
-      `\n\nexport function ${name}() {\n// TODO \n}`
+      `\n\nexport function ${functionName}() {\n// TODO \n}`
     )
   );
-  console.log(green('added function: '), name, green('to'), filepath);
+  console.log(green('added function: '), functionName, green('to'), filepath);
 
   writeFileSync(extension_path, extension_content);
   console.log(green('updated'), extension_path);
+
+  writeFileSync('./package.json', JSON.stringify(packageFile, null, 2));
 };
 
 if (!tasks[process.argv[2]])

@@ -2,7 +2,7 @@
     "name": "sameer",
     "displayName": "sameer",
     "description": "vscode utilities i use",
-    "version": "1.0.65",
+    "version": "1.0.81",
     "publisher": "sameer",
     "repository": "https://github.com/sameerveda/vscode-plugin",
     "engines": {
@@ -19,7 +19,8 @@
         "onCommand:sameer.create_index_file",
         "onCommand:sameer.minify",
         "onCommand:sameer.show_config",
-        "onCommand:sameer.json_to_ts"
+        "onCommand:sameer.json_to_ts",
+        "onCommand:sam.utils.run_dynamic"
     ],
     "main": "./dist/extension.min.js",
     "contributes": {
@@ -55,6 +56,10 @@
             {
                 "command": "sameer.show_config",
                 "title": "Sameer: Show Config"
+            },
+            {
+                "command": "sam.utils.run_dynamic",
+                "title": "Sameer: Run Dynamic"
             }
         ],
         "menus": {
@@ -112,10 +117,8 @@
     },
     "dependencies": {
         "esbuild": "^0.13.12",
-        "hex-rgb": "^5.0.0",
         "json-to-ts": "^1.7.0",
         "lodash": "^4.17.21",
-        "mathjs": "^9.5.1",
         "minimatch": "^3.0.4",
         "tempfile": "^4.0.0",
         "terser": "^5.10.0"
