@@ -2,11 +2,14 @@ import { existsSync, statSync } from 'fs';
 import { join } from 'path';
 import vscode, { window, workspace } from 'vscode';
 import { replaceSelections } from './utils';
+import { isFunction } from 'lodash';
 
 let last_mod_run_dynamic = 0;
-let keys = null;
+let updateCount = 0;
+let callCount = 0;
+let allOptions;
 
-export async function run_dynamic() {
+async function _run_dynamic() {
   const file = workspace.workspaceFolders
     .map(
       (item) =>
@@ -20,27 +23,49 @@ export async function run_dynamic() {
       'file .vscode/sam-dynamic.js not found'
     );
 
-  const new_mode = statSync(file).mtimeMs;
-  if (last_mod_run_dynamic != null) {
-    last_mod_run_dynamic = new_mode;
+  const new_mtime = statSync(file).mtimeMs;
+  if (last_mod_run_dynamic != new_mtime) {
+    last_mod_run_dynamic = new_mtime;
     delete require.cache[require.resolve(file)];
-    keys = null;
+
+    allOptions = Object.entries(require(file)).map(([k, v]) => ({
+      key: k,
+      accessTime: 0,
+      handler: isFunction(v) ? v : v.handler,
+      visible: () =>
+        v.visible == null || (isFunction(v.visible) ? v.visible() : v.visible),
+      title: () =>
+        !v.title ? k : isFunction(v.title) ? v.title(v, k) : String(v.title),
+    }));
+
+    updateCount++;
   }
 
-  const imported = require(file);
-  if (!keys) Object.keys(imported);
+  const activeOptions = allOptions
+    .filter((v) => v.visible())
+    .sort((a, b) => b.accessTime - a.accessTime);
 
-  if (!keys.length)
+  if (!activeOptions.length)
     return void window.showErrorMessage('file .vscode/sam-dynamic.js is empty');
 
-  const choice = await window.showQuickPick(keys, {
-    placeHolder: 'updated on: ' + new Date(last_mod_run_dynamic),
+  const texts = activeOptions.map((t) => t.title());
+  const choice = await window.showQuickPick(texts, {
+    placeHolder: `updated/call count: ${updateCount}/${callCount}/${texts.length}`,
   });
+
   if (!choice) return void window.showInformationMessage('cancelled');
 
-  if (keys[0] !== choice) {
-    keys.splice(keys.indexOf(choice), 1);
-    keys.unshift(choice);
+  const option = activeOptions[texts.indexOf(choice)];
+
+  option.handler({ replaceSelections, vscode });
+  option.accessTime = Date.now();
+  callCount++;
+}
+
+export async function run_dynamic() {
+  try {
+    await _run_dynamic();
+  } catch (error) {
+    window.showErrorMessage(error.message || String(error));
   }
-  imported[choice]({ replaceSelections, vscode });
 }

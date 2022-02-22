@@ -2,7 +2,7 @@
     "name": "sameer",
     "displayName": "sameer",
     "description": "vscode utilities i use",
-    "version": "1.0.81",
+    "version": "1.0.90",
     "publisher": "sameer",
     "repository": "https://github.com/sameerveda/vscode-plugin",
     "engines": {
@@ -16,6 +16,8 @@
         "onCommand:sameer.doMath.selected",
         "onCommand:sameer.angular.sort_attrs",
         "onCommand:sameer.sort_lines",
+        "onCommand:sameer.replace-slash_1",
+        "onCommand:sameer.replace-slash_2",
         "onCommand:sameer.create_index_file",
         "onCommand:sameer.minify",
         "onCommand:sameer.show_config",
@@ -32,6 +34,14 @@
             {
                 "command": "sameer.sort_lines",
                 "title": "Sameer: Sort Lines"
+            },
+            {
+                "command": "sameer.replace-slash_1",
+                "title": "Sameer: Replace Slash \\ -> /"
+            },
+            {
+                "command": "sameer.replace-slash_2",
+                "title": "Sameer: Replace Slash \\ -> \\\\"
             },
             {
                 "command": "sameer.angular.sort_attrs",
