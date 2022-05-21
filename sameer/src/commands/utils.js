@@ -1,12 +1,26 @@
-import { Selection, window } from 'vscode';
+import { Range, window } from "vscode";
+
+export async function fullTextReplace(replacer) {
+  if (!replacer) throw new Error("replacer is required");
+
+  const textEditor = window.activeTextEditor;
+  if (!textEditor) {
+    return;
+  }
+
+  let invalidRange = new Range(0, 0, textEditor.document.lineCount /*intentionally missing the '-1' */, 0);
+  let fullRange = textEditor.document.validateRange(invalidRange);
+  const t = replacer(textEditor.document.getText(fullRange));
+  t == null || textEditor.edit((edit) => edit.replace(fullRange, t));
+}
 
 /**
  *
- * @param {(s: string, selection?: Selection) => string | Promise<string>} replacer
+ * @param {(s: string, selection?: import('vscode').Selection) => string | Promise<string>} replacer
  * @returns
  */
 export async function replaceSelections(replacer, appendError = false) {
-  if (!replacer) throw new Error('replacer is required');
+  if (!replacer) throw new Error("replacer is required");
 
   const textEditor = window.activeTextEditor;
   if (!textEditor) {
@@ -19,8 +33,7 @@ export async function replaceSelections(replacer, appendError = false) {
     try {
       results[n] = await replacer(textEditor.document.getText(s), s);
     } catch (error) {
-      if (appendError)
-        results[n] = `//${String(error)}\n${textEditor.document.getText(s)}`;
+      if (appendError) results[n] = `//${String(error)}\n${textEditor.document.getText(s)}`;
       else window.showErrorMessage(`Failed to evaluate "${s}", ${error}`);
       return;
     }
@@ -43,5 +56,32 @@ export async function replaceSelections(replacer, appendError = false) {
 }
 
 export function show_config() {
-  window.showInformationMessage(JSON.stringify('hello'));
+  window.showInformationMessage(JSON.stringify("hello"));
+}
+
+/**
+ *
+ * @param {(s: string) => any} callback
+ * @returns
+ */
+export function lodashCall(callback) {
+  return () => replaceSelections((s) => callback(s));
+}
+
+/**
+ * @template T,R
+ * @param {(s: string, t: T) => R} callback
+ * @param {import('vscode').InputBoxOptions} options
+ * * @param {(s: string) => T} converter
+ * @returns
+ */
+export function lodashCallWithInput(callback, options = {}, converter = (k) => k) {
+  options.title = options.title || callback.name || "";
+
+  return () =>
+    replaceSelections(async (s) => {
+      const t = await window.showInputBox(options);
+      const c = t && converter(t);
+      return c == null ? undefined : JSON.stringify(callback(s, c)).replace(/^"/, "").replace(/"$/, "");
+    });
 }

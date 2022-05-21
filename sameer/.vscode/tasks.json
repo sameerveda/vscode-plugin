@@ -1,0 +1,16 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "package:install",
+			"problemMatcher": [],
+			"label": "npm: package:install",
+			"detail": "npm run package && code --uninstall-extension sameer.sameer && code --install-extension dist-vsix/sameer.vsix",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		}
+	]
+}
