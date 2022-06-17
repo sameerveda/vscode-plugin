@@ -1,4 +1,4 @@
-import { statSync, readdirSync, existsSync, writeFileSync, unlinkSync } from "fs";
+import { statSync, readdirSync, existsSync, writeFileSync, unlinkSync, readFileSync } from "fs";
 import { dirname, join } from "path";
 import { window, workspace } from "vscode";
 const minimatch = require("minimatch");
@@ -26,7 +26,10 @@ export function create_index_file(uri) {
         .map((s) => `export * from './${s}';`)
         .join("\n");
 
-      writeFileSync(join(root, "index" + ext), content);
+      const out = join(root, "index" + ext);
+      if (existsSync(out) && readFileSync(out, "utf-8").includes("@no-index-generate"))
+        window.showInformationMessage("index-generate skipped, @no-index-generate found.");
+      else writeFileSync(out, content);
     },
   });
 
