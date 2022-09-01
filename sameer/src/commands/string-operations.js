@@ -5,6 +5,10 @@ import { window, env, workspace } from "vscode";
 import { statSync, writeFileSync, readFileSync, mkdirSync } from "fs";
 import { dirname, basename, join, resolve } from "path";
 import JsonToTS from "json-to-ts";
+import postcss from "postcss";
+import cssnano from "cssnano";
+import litePreset from 'cssnano-preset-lite';
+
 
 export function apply_eval() {
   // https://esbuild.github.io/content-types/#direct-eval
@@ -30,11 +34,35 @@ const minify_options = {
   mangle: true,
   sourceMap: true,
 };
+
+function minifyCss(content) {
+  return minify(content, minify_options).then(({ code }) => code);
+}
+
+const minifiers = {
+  css: (content) =>
+    postcss([cssnano({ preset: litePreset() })])
+      .process(content)
+      .then(({ css }) => css),
+  js: (content) => minify(content, minify_options).then(({ code }) => code),
+};
+
 export async function apply_minify(uri) {
+  const ext = /(\w+)$/.exec(uri?.fsPath || window.activeTextEditor?.document?.fileName || "")?.[1].toLowerCase();
+  if (!ext || !(ext in minifiers)) {
+    const choice = await window.showQuickPick(Object.keys(minifiers), {
+      placeHolder: "select minifier type",
+    });
+
+    if (!choice) return void window.showInformationMessage("cancelled");
+  }
+
+  const minify = minifiers[ext];
+
   if (!uri) {
     return void (await replaceSelections(async (s) => {
-      const code = (await minify(s, minify_options)).code;
-      env.clipboard.writeText(`// Updated: ${new Date().toISOString()} (${code.length})\n` + code);
+      const code = await minify(s);
+      env.clipboard.writeText(`/* Updated: ${new Date().toISOString()} (${code.length}) */\n` + code);
       window.showInformationMessage(
         `Saved to clipboard: (${window.activeTextEditor.document.fileName.endsWith(".css") ? "css" : "js"})`
       );
@@ -58,7 +86,7 @@ export async function apply_minify(uri) {
 
   !statSync(dirname(outFile)).isDirectory() && mkdirSync(dirname(outFile), { recursive: true });
 
-  writeFileSync(outFile, (await minify(readFileSync(filepath, "utf-8"), minify_options)).code);
+  writeFileSync(outFile, await minify(readFileSync(filepath, "utf-8")));
 
   window.showInformationMessage("Saved: " + resolve(outFile));
 }
