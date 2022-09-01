@@ -7,7 +7,6 @@ import { dirname, basename, join, resolve } from "path";
 import JsonToTS from "json-to-ts";
 import postcss from "postcss";
 import cssnano from "cssnano";
-import litePreset from 'cssnano-preset-lite';
 
 
 export function apply_eval() {
@@ -41,7 +40,7 @@ function minifyCss(content) {
 
 const minifiers = {
   css: (content) =>
-    postcss([cssnano({ preset: litePreset() })])
+    postcss([cssnano({ preset: "default" })])
       .process(content)
       .then(({ css }) => css),
   js: (content) => minify(content, minify_options).then(({ code }) => code),
