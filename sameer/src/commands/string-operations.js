@@ -7,7 +7,7 @@ import { dirname, basename, join, resolve } from "path";
 import JsonToTS from "json-to-ts";
 import postcss from "postcss";
 import cssnano from "cssnano";
-
+import postcssNested from "postcss-nested";
 
 export function apply_eval() {
   // https://esbuild.github.io/content-types/#direct-eval
@@ -34,8 +34,46 @@ const minify_options = {
   sourceMap: true,
 };
 
-function minifyCss(content) {
-  return minify(content, minify_options).then(({ code }) => code);
+export async function process_with_compiler({ uri, compiler, copyMsg, inputOption }) {
+  if (!uri) {
+    return void (await replaceSelections(async (s) => {
+      const code = await compiler(s);
+      env.clipboard.writeText(`/* Updated: ${new Date().toISOString()} (${code.length}) */\n` + code);
+      window.showInformationMessage(`Saved to clipboard: ${copyMsg}`);
+      return null;
+    }));
+  }
+
+  const filepath = uri.fsPath;
+  let outFile = await window.showInputBox({
+    ...inputOption,
+    value: basename(filepath).replace(/(\.\w+)$/, ".min$1"),
+  });
+
+  if (!outFile || !outFile.trim()) {
+    window.showErrorMessage("Cancelled");
+    return;
+  }
+
+  outFile = resolve(join(dirname(filepath), outFile));
+
+  !statSync(dirname(outFile)).isDirectory() && mkdirSync(dirname(outFile), { recursive: true });
+
+  writeFileSync(outFile, await compiler(readFileSync(filepath, "utf-8")));
+
+  window.showInformationMessage("Saved: " + resolve(outFile));
+}
+
+export async function compile_css_postcss(uri) {
+  process_with_compiler({
+    uri,
+    compiler: (content) =>
+      postcss(postcssNested)
+        .process(content)
+        .then(({ css }) => css),
+    copyMsg: `(${window.activeTextEditor.document.fileName.endsWith(".css") ? "css" : "js"})`,
+    inputOption: { placeHolder: "Save minified file To", prompt: "Sameer: Minify" },
+  });
 }
 
 const minifiers = {
@@ -56,38 +94,14 @@ export async function apply_minify(uri) {
     if (!choice) return void window.showInformationMessage("cancelled");
   }
 
-  const minify = minifiers[ext];
+  const compiler = minifiers[ext];
 
-  if (!uri) {
-    return void (await replaceSelections(async (s) => {
-      const code = await minify(s);
-      env.clipboard.writeText(`/* Updated: ${new Date().toISOString()} (${code.length}) */\n` + code);
-      window.showInformationMessage(
-        `Saved to clipboard: (${window.activeTextEditor.document.fileName.endsWith(".css") ? "css" : "js"})`
-      );
-      return null;
-    }));
-  }
-
-  const filepath = uri.fsPath;
-  let outFile = await window.showInputBox({
-    placeHolder: "Save minified file To",
-    prompt: "Sameer: Minify",
-    value: basename(filepath).replace(/(\.\w+)$/, ".min$1"),
+  process_with_compiler({
+    uri,
+    compiler,
+    copyMsg: `(${window.activeTextEditor.document.fileName.endsWith(".css") ? "css" : "js"})`,
+    inputOption: { placeHolder: "Save minified file To", prompt: "Sameer: Minify" },
   });
-
-  if (!outFile || !outFile.trim()) {
-    window.showErrorMessage("Cancelled");
-    return;
-  }
-
-  outFile = resolve(join(dirname(filepath), outFile));
-
-  !statSync(dirname(outFile)).isDirectory() && mkdirSync(dirname(outFile), { recursive: true });
-
-  writeFileSync(outFile, await minify(readFileSync(filepath, "utf-8")));
-
-  window.showInformationMessage("Saved: " + resolve(outFile));
 }
 
 export function json_to_ts() {

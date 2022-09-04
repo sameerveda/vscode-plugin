@@ -2,7 +2,7 @@
     "name": "sameer",
     "displayName": "sameer",
     "description": "vscode utilities i use",
-    "version": "1.0.116",
+    "version": "1.0.117",
     "publisher": "sameer",
     "repository": "https://github.com/sameerveda/vscode-plugin",
     "engines": {
@@ -20,6 +20,7 @@
         "onCommand:sameer.replace-slash_2",
         "onCommand:sameer.create_index_file",
         "onCommand:sameer.minify",
+        "onCommand:sameer.compile_css_postcss",
         "onCommand:sameer.show_config",
         "onCommand:sameer.json_to_ts",
         "onCommand:sam.utils.run_dynamic",
@@ -81,6 +82,10 @@
             {
                 "command": "sameer.minify",
                 "title": "Sameer: Minify"
+            },
+            {
+                "command": "sameer.compile_css_postcss",
+                "title": "Sameer: Compile Css (Postcss)"
             },
             {
                 "command": "sameer.show_config",
@@ -178,6 +183,11 @@
                     "command": "sameer.minify",
                     "group": "Sameer",
                     "when": "activeViewlet == 'workbench.view.explorer'"
+                },
+                {
+                    "command": "sameer.compile_css_postcss",
+                    "group": "Sameer",
+                    "when": "activeViewlet == 'workbench.view.explorer'"
                 }
             ]
         },
@@ -229,6 +239,7 @@
         "lodash-es": "^4.17.21",
         "minimatch": "^3.0.4",
         "postcss": "^8.4.16",
+        "postcss-nested": "^5.0.6",
         "tempfile": "^4.0.0",
         "terser": "^5.10.0"
     },
