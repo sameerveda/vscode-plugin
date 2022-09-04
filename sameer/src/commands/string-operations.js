@@ -34,13 +34,15 @@ const minify_options = {
   sourceMap: true,
 };
 
-export async function process_with_compiler({ uri, compiler, copyMsg, inputOption }) {
+export async function process_with_compiler({ uri, compiler, replace = false, copyMsg, inputOption }) {
   if (!uri) {
     return void (await replaceSelections(async (s) => {
       const code = await compiler(s);
-      env.clipboard.writeText(`/* Updated: ${new Date().toISOString()} (${code.length}) */\n` + code);
-      window.showInformationMessage(`Saved to clipboard: ${copyMsg}`);
-      return null;
+      if (!replace) {
+        env.clipboard.writeText(`/* Updated: ${new Date().toISOString()} (${code.length}) */\n` + code);
+        window.showInformationMessage(`Saved to clipboard: ${copyMsg}`);
+      }
+      return replace ? code : null;
     }));
   }
 
@@ -71,6 +73,7 @@ export async function compile_css_postcss(uri) {
       postcss(postcssNested)
         .process(content)
         .then(({ css }) => css),
+    replace: true,
     copyMsg: `(${window.activeTextEditor.document.fileName.endsWith(".css") ? "css" : "js"})`,
     inputOption: { placeHolder: "Save minified file To", prompt: "Sameer: Minify" },
   });
