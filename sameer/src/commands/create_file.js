@@ -1,4 +1,5 @@
 import { statSync, readdirSync, existsSync, writeFileSync, unlinkSync, readFileSync } from "fs";
+import { escapeRegExp } from "lodash-es";
 import { dirname, join } from "path";
 import { window, workspace } from "vscode";
 const minimatch = require("minimatch");
@@ -10,28 +11,32 @@ export function create_index_file(uri) {
     : () => false;
   const root = statSync(uri.fsPath).isDirectory() ? uri.fsPath : dirname(uri.fsPath);
 
-  const jsCollector = (ext) => ({
-    files: [],
-    addFile({ name, path, isDir }) {
-      if (isDir && existsSync(join(path, "index" + ext))) return this.files.push(name), true;
+  const jsCollector = (ext) => {
+    const findExt = new RegExp(escapeRegExp(ext) + "x?$");
+    const replaceExt = new RegExp(escapeRegExp(ext) + "$");
+    return {
+      files: [],
+      addFile({ name, path, isDir }) {
+        if (isDir && existsSync(join(path, "index" + ext))) return this.files.push(name), true;
 
-      if (name.endsWith(ext) && !name.endsWith(".spec" + ext) && name !== "index.ts" && name !== "index.js") {
-        return this.files.push(name.substring(0, name.length - 3)), true;
-      }
-    },
-    finalize() {
-      if (!this.files.length) return;
-      const content = this.files
-        .sort()
-        .map((s) => `export * from './${s}';`)
-        .join("\n");
+        if (findExt.test(ext) && !name.includes(".spec." + ext) && name !== "index.ts" && name !== "index.js") {
+          return this.files.push(name.replace(replaceExt, "")), true;
+        }
+      },
+      finalize() {
+        if (!this.files.length) return;
+        const content = this.files
+          .sort()
+          .map((s) => `export * from './${s}';`)
+          .join("\n");
 
-      const out = join(root, "index" + ext);
-      if (existsSync(out) && readFileSync(out, "utf-8").includes("@no-index-generate"))
-        window.showInformationMessage("index-generate skipped, @no-index-generate found.");
-      else writeFileSync(out, content);
-    },
-  });
+        const out = join(root, "index" + ext);
+        if (existsSync(out) && readFileSync(out, "utf-8").includes("@no-index-generate"))
+          window.showInformationMessage("index-generate skipped, @no-index-generate found.");
+        else writeFileSync(out, content);
+      },
+    };
+  };
 
   const collectors = [
     jsCollector(".ts"),

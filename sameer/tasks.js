@@ -1,7 +1,7 @@
 const { existsSync, writeFileSync, readFileSync } = require("fs");
 const { join } = require("path");
 const { red, green } = require("kleur");
-const { snakeCase } = require("lodash");
+const { snakeCase } = require("lodash-es");
 
 const tasks = {};
 

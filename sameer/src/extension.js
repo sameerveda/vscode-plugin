@@ -38,6 +38,7 @@ function activate(context) {
   register("sameer.angular.sort_attrs", sortAttrs);
   register("sameer.create_index_file", create_index_file);
   register("sameer.sort_lines", sort_lines);
+  register("sameer.rm_new_lines", () => replaceSelections((s) => s.replace(/\r?\n/g, "")));
   register("sameer.minify", apply_minify);
   register("sameer.compile_css_postcss", compile_css_postcss);
   register("sameer.show_config", show_config);
