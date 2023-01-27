@@ -2,7 +2,7 @@
     "name": "sameer",
     "displayName": "sameer",
     "description": "vscode utilities i use",
-    "version": "1.0.122",
+    "version": "1.0.124",
     "publisher": "sameer",
     "repository": "https://github.com/sameerveda/vscode-plugin",
     "engines": {
@@ -16,6 +16,7 @@
         "onCommand:sameer.doMath.selected",
         "onCommand:sameer.angular.sort_attrs",
         "onCommand:sameer.sort_lines",
+        "onCommand:sameer.sort_words",
         "onCommand:sameer.rm_new_lines",
         "onCommand:sameer.replace-slash_1",
         "onCommand:sameer.replace-slash_2",
@@ -55,6 +56,10 @@
             {
                 "command": "sameer.sort_lines",
                 "title": "Sameer: Sort Lines"
+            },
+            {
+                "command": "sameer.sort_words",
+                "title": "Sameer: Sort Words"
             },
             {
                 "command": "sameer.rm_new_lines",

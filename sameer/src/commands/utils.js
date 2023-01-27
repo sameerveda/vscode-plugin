@@ -14,6 +14,12 @@ export async function fullTextReplace(replacer) {
   t == null || textEditor.edit((edit) => edit.replace(fullRange, t));
 }
 
+export const getSelectedText = () => {
+  const textEditor = window.activeTextEditor;
+  const selection = textEditor?.selections?.[0];
+  return selection ? textEditor.document.getText(selection) : null;
+};
+
 /**
  *
  * @param {(s: string, selection?: import('vscode').Selection) => string | Promise<string>} replacer

@@ -3,7 +3,7 @@ import { sortAttrs } from "./commands/angular-utils";
 import { create_index_file } from "./commands/create_file";
 import { run_dynamic } from "./commands/run_dynamic";
 // import { doMath } from './commands/do-math';
-import { apply_eval, sort_lines, apply_minify, json_to_ts, compile_css_postcss } from "./commands/string-operations";
+import { apply_eval, apply_minify, json_to_ts, compile_css_postcss } from "./commands/string-operations";
 import { lodashCall, lodashCallWithInput, replaceSelections, show_config } from "./commands/utils";
 import {
   camelCase,
@@ -37,7 +37,22 @@ function activate(context) {
   // register('sameer.doMath.selected', doMath);
   register("sameer.angular.sort_attrs", sortAttrs);
   register("sameer.create_index_file", create_index_file);
-  register("sameer.sort_lines", sort_lines);
+  register("sameer.sort_lines", () =>
+    replaceSelections((s) =>
+      s
+        .split(/\r?\n/g)
+        .sort((a, b) => a.trim().localeCompare(b.trim()))
+        .join("\n")
+    )
+  );
+  register("sameer.sort_words", () =>
+    replaceSelections((s) =>
+      s
+        .split(/\s+/g)
+        .sort((a, b) => a.trim().localeCompare(b.trim()))
+        .join(" ")
+    )
+  );
   register("sameer.rm_new_lines", () => replaceSelections((s) => s.replace(/\r?\n/g, "")));
   register("sameer.minify", apply_minify);
   register("sameer.compile_css_postcss", compile_css_postcss);

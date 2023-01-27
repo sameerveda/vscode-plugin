@@ -1,7 +1,7 @@
 import { existsSync, statSync } from 'fs';
 import { join } from 'path';
 import vscode, { window, workspace } from 'vscode';
-import { replaceSelections, fullTextReplace } from './utils';
+import { replaceSelections, getSelectedText, fullTextReplace } from './utils';
 import { isFunction, escapeRegExp } from 'lodash-es';
 
 let last_mod_run_dynamic = 0;
@@ -57,7 +57,7 @@ async function _run_dynamic() {
 
   const option = activeOptions[texts.indexOf(choice)];
 
-  option.handler({ replaceSelections, fullTextReplace, escapeRegExp, vscode });
+  option.handler({ replaceSelections, fullTextReplace, escapeRegExp, getSelectedText, vscode });
   option.accessTime = Date.now();
   callCount++;
 }

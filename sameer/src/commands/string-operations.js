@@ -18,15 +18,6 @@ export function apply_eval() {
   });
 }
 
-export function sort_lines() {
-  replaceSelections((s) =>
-    s
-      .split(/\r?\n/g)
-      .sort((a, b) => a.trim().localeCompare(b.trim()))
-      .join("\n")
-  );
-}
-
 const minify_options = {
   keep_fnames: true,
   compress: true,
