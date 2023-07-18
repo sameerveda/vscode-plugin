@@ -13,9 +13,9 @@ export async function create_index_file(uri) {
     : () => false;
 
   const mappers = {
-    ".js": (s) => (s.endsWith(".spec.js") ? null : `export * from "./${s.replace(".js", "")}"}`),
-    ".ts": (s) => (s.endsWith(".spec.ts") ? null : `export * from "./${s.replace(".ts", "")}"`),
-    ".dart": (s) => `export './${s}'`,
+    ".js": (s) => (s.endsWith(".spec.js") ? null : `export * from './${s.replace(".js", "")}';`),
+    ".ts": (s) => (s.endsWith(".spec.ts") ? null : `export * from './${s.replace(".ts", "")}';`),
+    ".dart": (s) => `export './${s}';`,
   };
 
   const items = groupBy(
@@ -38,4 +38,6 @@ export async function create_index_file(uri) {
   if (!choice) return window.showInformationMessage("cancelled");
 
   writeFileSync(join(root, "index" + choice), items[choice].map(mappers[choice]).filter(Boolean).join("\n"));
+
+  window.showInformationMessage("created: index" + choice);
 }
