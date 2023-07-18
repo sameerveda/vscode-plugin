@@ -37,7 +37,15 @@ export async function create_index_file(uri) {
 
   if (!choice) return window.showInformationMessage("cancelled");
 
-  writeFileSync(join(root, "index" + choice), items[choice].map(mappers[choice]).filter(Boolean).join("\n"));
+  const out = "index" + choice;
+  writeFileSync(
+    join(root),
+    items[choice]
+      .filter((t) => out != t)
+      .map(mappers[choice])
+      .filter(Boolean)
+      .join("\n")
+  );
 
-  window.showInformationMessage("created: index" + choice);
+  window.showInformationMessage("created: " + out);
 }
