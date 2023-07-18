@@ -23,14 +23,19 @@ export async function create_index_file(uri) {
     extname
   );
 
-  if (isEmpty(items))
+  const exts = Object.keys(items);
+
+  if (exts.length === 0)
     return window.showInformationMessage("no supported files found.\n supported: " + Object.keys(mappers).join(","));
 
-  const choice = await window.showQuickPick(Object.keys(items), {
-    placeHolder: `Create index file for`,
-  });
+  const choice =
+    exts.length === 1
+      ? exts[0]
+      : await window.showQuickPick(Object.keys(items), {
+          placeHolder: `Create index file for`,
+        });
 
-  if (choice) return window.showInformationMessage("cancelled");
+  if (!choice) return window.showInformationMessage("cancelled");
 
   writeFileSync(join(root, "index" + choice), items[choice].map(mappers[choice]).filter(Boolean).join("\n"));
 }
