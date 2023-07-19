@@ -23,7 +23,7 @@ export async function create_index_file(uri) {
     extname
   );
 
-  const exts = Object.keys(items);
+  const exts = Object.keys(items).filter((k) => k in mappers);
 
   if (exts.length === 0)
     return window.showInformationMessage("no supported files found.\n supported: " + Object.keys(mappers).join(","));
@@ -39,7 +39,7 @@ export async function create_index_file(uri) {
 
   const out = "index" + choice;
   writeFileSync(
-    join(root),
+    join(root, out),
     items[choice]
       .filter((t) => out != t)
       .map(mappers[choice])
