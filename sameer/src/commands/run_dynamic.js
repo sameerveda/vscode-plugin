@@ -23,8 +23,9 @@ async function _run_dynamic() {
     delete require.cache[require.resolve(file)];
 
     const imported = require(file);
-    if(!imported.runnables) return window.showErrorMessage('module.exports.runnables not found, in sam-dynamic.js file');
-    
+    if (!imported.runnables)
+      return window.showErrorMessage("module.exports.runnables not found, in sam-dynamic.js file");
+
     allOptions = Object.entries(imported.runnables).map(([k, v]) => ({
       key: k,
       accessTime: 0,
@@ -68,6 +69,6 @@ export async function run_dynamic() {
   try {
     await _run_dynamic();
   } catch (error) {
-    window.showErrorMessage(error.message || String(error));
+    window.showErrorMessage(`${error.message || String(error)}\n${error.stack}`);
   }
 }

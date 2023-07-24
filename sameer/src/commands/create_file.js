@@ -15,7 +15,7 @@ export async function create_index_file(uri) {
   const mappers = {
     ".js": (s) => (s.endsWith(".spec.js") ? null : `export * from './${s.replace(".js", "")}';`),
     ".ts": (s) => (s.endsWith(".spec.ts") ? null : `export * from './${s.replace(".ts", "")}';`),
-    ".dart": (s) => `export './${s}';`,
+    ".dart": (s) => s.endsWith(".g.dart") ? null : `export '${s}';`,
   };
 
   const items = groupBy(
